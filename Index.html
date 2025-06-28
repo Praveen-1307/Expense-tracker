@@ -2,171 +2,823 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Expense Tracker</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f8fafc;
+    * { 
+      box-sizing: border-box; 
       margin: 0;
-      padding: 30px;
+      padding: 0;
     }
-
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
       padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      color: #2d3748;
     }
 
-    h1 {
-      text-align: center;
-      color: #2c3e50;
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
     }
 
-    input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-
-    button {
-      background-color: #3498db;
+    .header {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
       color: white;
-      border: none;
-      cursor: pointer;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
     }
 
-    button:hover {
-      background-color: #2980b9;
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      opacity: 0.3;
     }
 
-    .expense-item {
-      background: #f9f9f9;
-      padding: 10px;
-      border-left: 5px solid #3498db;
-      margin-top: 10px;
-      border-radius: 6px;
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0;
+      position: relative;
+      z-index: 1;
     }
 
-    .total {
-      font-weight: bold;
-      margin-top: 20px;
-      font-size: 18px;
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin: 0.5rem 0 0 0;
+      position: relative;
+      z-index: 1;
     }
 
-    .limit-exceeded {
-      color: red;
-      font-weight: bold;
-      margin-top: 10px;
+    .content {
+      padding: 2rem;
+    }
+
+    .section-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .section-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     }
 
     .section-title {
-      margin-top: 30px;
-      font-weight: bold;
-      color: #2c3e50;
-      font-size: 18px;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1a202c;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .card {
-      margin-bottom: 20px;
-      border-radius: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    .section-title i {
+      color: #4f46e5;
+    }
+
+    .form-control, .form-select {
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      background: #f8fafc;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      background: white;
+    }
+
+    .btn {
+      border-radius: 12px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: linear-gradient(135deg, #047857 0%, #059669 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-warning {
+      background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+      color: white;
+    }
+
+    .btn-warning:hover {
+      background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-outline-primary {
+      border: 2px solid #4f46e5;
+      color: #4f46e5;
+      background: transparent;
+    }
+
+    .btn-outline-primary:hover {
+      background: #4f46e5;
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline-danger {
+      border: 2px solid #dc2626;
+      color: #dc2626;
+      background: transparent;
+    }
+
+    .btn-outline-danger:hover {
+      background: #dc2626;
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .expense-item {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 0.75rem;
+      border-left: 4px solid #4f46e5;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .expense-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .expense-item:hover::before {
+      opacity: 1;
+    }
+
+    .expense-item:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .expense-item.recurring {
+      border-left-color: #059669;
+    }
+
+    .expense-item.recurring::before {
+      background: linear-gradient(135deg, rgba(5, 150, 105, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+    }
+
+    .total {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1a202c;
+      padding: 1rem;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-radius: 12px;
+      text-align: center;
+      margin: 1rem 0;
+      border: 2px solid #0ea5e9;
+    }
+
+    .limit-exceeded {
+      color: #dc2626;
+      font-weight: 600;
+      padding: 1rem;
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-radius: 12px;
+      text-align: center;
+      margin: 1rem 0;
+      border: 2px solid #dc2626;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .recent-categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .category-tag {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+
+    .category-tag:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+    }
+
+    .data-viewer {
+      background: #1a202c;
+      color: #e2e8f0;
+      border-radius: 12px;
+      padding: 1rem;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 0.85rem;
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #2d3748;
     }
 
     .dark-mode {
-      background-color: #181a1b !important;
-      color: #f1f1f1 !important;
+      background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%) !important;
+      color: #e2e8f0 !important;
+    }
+
+    .dark-mode .section-card {
+      background: #2d3748;
+      border-color: #4a5568;
+    }
+
+    .dark-mode .form-control,
+    .dark-mode .form-select {
+      background: #4a5568;
+      border-color: #718096;
+      color: #e2e8f0;
+    }
+
+    .dark-mode .expense-item {
+      background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 1.5rem;
+      border-radius: 16px;
+      text-align: center;
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #4f46e5;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .form-check-input:checked {
+      background-color: #4f46e5;
+      border-color: #4f46e5;
+    }
+
+    .form-check-input:focus {
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .content {
+        padding: 1rem;
+      }
+      
+      .section-card {
+        padding: 1rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="container py-4">
-    <div class="card p-4">
-      <h1 class="text-center mb-4">💸 Expense Tracker</h1>
-      <div id="limit-area">
-        <div class="row g-3 mb-3">
-          <div class="col-md-6">
-            <label for="month" class="form-label">Select Month</label>
-            <input type="month" id="month" class="form-control">
-          </div>
-          <div class="col-md-6">
-            <label for="limit" class="form-label">Monthly Limit (₹)</label>
-            <input type="number" id="limit" class="form-control" placeholder="Enter limit...">
-          </div>
-        </div>
-        <button class="btn btn-primary w-100 mb-3" onclick="setLimit()">Set Limit</button>
-      </div>
-      <div id="limit-message" class="mb-3" style="display:none;"></div>
-      <div id="change-limit-btn" class="mb-3" style="display:none;">
-        <button class="btn btn-secondary w-100" onclick="showLimitArea()">Change Limit/Month</button>
-      </div>
-      <div class="section-title">Add Expense</div>
-      <div class="row g-3 mb-3">
-        <div class="col-md-3"><input type="date" id="date" class="form-control"></div>
-        <div class="col-md-3">
-          <input type="text" id="category" class="form-control" placeholder="Category (e.g. Food)">
-          <div id="recent-categories" class="mt-2"></div>
-        </div>
-        <div class="col-md-3"><input type="text" id="description" class="form-control" placeholder="Description"></div>
-        <div class="col-md-3"><input type="number" id="amount" class="form-control" placeholder="Amount ₹"></div>
-      </div>
-      <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" id="recurring">
-        <label class="form-check-label" for="recurring">Recurring Monthly</label>
-      </div>
-      <button class="btn btn-success w-100 mb-3" onclick="addExpense()">Add Expense</button>
-      <div class="section-title">Monthly Report</div>
-      <div id="expense-list"></div>
-      <div class="total" id="total">Total: ₹0</div>
-      <div class="limit-exceeded" id="limit-warning"></div>
-      <button class="btn btn-outline-primary w-100 mb-3" onclick="downloadCSV()">⬇️ Download CSV</button>
-      <div class="section-title">💳 Money Given to Friends</div>
-      <div class="row g-3 mb-3">
-        <div class="col-md-3"><input type="text" id="friend-name" class="form-control" placeholder="Friend's Name"></div>
-        <div class="col-md-3"><input type="text" id="friend-desc" class="form-control" placeholder="Reason (e.g. Lunch Treat)"></div>
-        <div class="col-md-3"><input type="number" id="friend-amount" class="form-control" placeholder="Amount ₹"></div>
-        <div class="col-md-3"><input type="date" id="friend-date" class="form-control"></div>
-      </div>
-      <button class="btn btn-warning w-100 mb-3" onclick="addFriendTransaction()">Add Friend Transaction</button>
-      <div id="friend-list"></div>
-      <div class="total" id="friend-total">Total Given: ₹0</div>
-      <div class="section-title">💰 Money Received from Friends</div>
-      <div class="row g-3 mb-3">
-        <div class="col-md-3"><input type="text" id="recv-friend-name" class="form-control" placeholder="Friend's Name"></div>
-        <div class="col-md-3"><input type="text" id="recv-friend-desc" class="form-control" placeholder="Reason (e.g. Repayment)"></div>
-        <div class="col-md-3"><input type="number" id="recv-friend-amount" class="form-control" placeholder="Amount ₹"></div>
-        <div class="col-md-3"><input type="date" id="recv-friend-date" class="form-control"></div>
-      </div>
-      <button class="btn btn-success w-100 mb-3" onclick="addReceivedTransaction()">Add Received Transaction</button>
-      <div id="recv-friend-list"></div>
-      <div class="total" id="recv-friend-total">Total Received: ₹0</div>
+  <div class="main-container">
+    <div class="header">
+      <h1><i class="fas fa-wallet"></i> Expense Tracker</h1>
+      <p>Track your expenses, manage budgets, and stay on top of your finances</p>
     </div>
-    <div class="text-center mt-3">
-      <button class="btn btn-dark" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-      <button class="btn btn-danger mt-2" onclick="clearAllData()">Clear All Data</button>
+
+    <div class="content">
+      <!-- Monthly Limit Section -->
+      <div class="section-card">
+        <div class="section-title">
+          <i class="fas fa-chart-line"></i>
+          Monthly Budget Setup
+        </div>
+        <div id="limit-area">
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label for="month" class="form-label">Select Month</label>
+              <input type="month" id="month" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label for="limit" class="form-label">Monthly Limit (₹)</label>
+              <input type="number" id="limit" class="form-control" placeholder="Enter your monthly budget...">
+            </div>
+          </div>
+          <button class="btn btn-primary w-100 mb-3" onclick="setLimit()">
+            <i class="fas fa-save"></i> Set Budget Limit
+          </button>
+        </div>
+        <div id="limit-message" class="mb-3" style="display:none;"></div>
+        <div id="change-limit-btn" class="mb-3" style="display:none;">
+          <button class="btn btn-outline-primary w-100" onclick="showLimitArea()">
+            <i class="fas fa-edit"></i> Change Budget/Month
+          </button>
+        </div>
+      </div>
+
+      <!-- Statistics Dashboard -->
+      <div class="section-card">
+        <div class="section-title">
+          <i class="fas fa-tachometer-alt"></i>
+          Financial Overview
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="total-expenses">₹0</div>
+            <div class="stat-label">Total Expenses</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="budget-remaining">₹0</div>
+            <div class="stat-label">Budget Remaining</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="friend-total-stat">₹0</div>
+            <div class="stat-label">Money Given</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="received-total-stat">₹0</div>
+            <div class="stat-label">Money Received</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Expense Section -->
+      <div class="section-card">
+        <div class="section-title">
+          <i class="fas fa-plus-circle"></i>
+          Add New Expense
+        </div>
+        <div class="row g-3 mb-3">
+          <div class="col-md-2">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" id="date" class="form-control">
+          </div>
+          <div class="col-md-2">
+            <label for="time" class="form-label">Time</label>
+            <input type="time" id="time" class="form-control">
+          </div>
+          <div class="col-md-2">
+            <label for="category" class="form-label">Category</label>
+            <input type="text" id="category" class="form-control" placeholder="e.g. Food, Transport">
+            <div id="recent-categories" class="recent-categories"></div>
+          </div>
+          <div class="col-md-3">
+            <label for="description" class="form-label">Description</label>
+            <input type="text" id="description" class="form-control" placeholder="What was this expense for?">
+          </div>
+          <div class="col-md-3">
+            <label for="amount" class="form-label">Amount (₹)</label>
+            <input type="number" id="amount" class="form-control" placeholder="0.00" step="0.01">
+          </div>
+        </div>
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="recurring">
+          <label class="form-check-label" for="recurring">
+            <i class="fas fa-redo"></i> Recurring Monthly Expense
+          </label>
+        </div>
+        <button class="btn btn-success w-100 mb-3" onclick="addExpense()">
+          <i class="fas fa-plus"></i> Add Expense
+        </button>
+      </div>
+
+      <!-- Monthly Report Section -->
+      <div class="section-card">
+        <div class="section-title">
+          <i class="fas fa-list-alt"></i>
+          Monthly Expense Report
+        </div>
+        <div id="expense-list"></div>
+        <div class="total" id="total">Total: ₹0</div>
+        <div class="limit-exceeded" id="limit-warning"></div>
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <button class="btn btn-outline-primary w-100" onclick="downloadCSV()">
+              <i class="fas fa-download"></i> Download CSV Report
+            </button>
+          </div>
+          <div class="col-md-6">
+            <button class="btn btn-outline-danger w-100" onclick="clearExpenses()">
+              <i class="fas fa-trash"></i> Clear All Expenses
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Friend Transactions Section -->
+      <div class="section-card">
+        <div class="section-title">
+          <i class="fas fa-hand-holding-usd"></i>
+          Money Given to Friends
+        </div>
+        <div class="row g-3 mb-3">
+          <div class="col-md-2">
+            <label for="friend-name" class="form-label">Friend's Name</label>
+            <input type="text" id="friend-name" class="form-control" placeholder="Name">
+          </div>
+          <div class="col-md-2">
+            <label for="friend-desc" class="form-label">Reason</label>
+            <input type="text" id="friend-desc" class="form-control" placeholder="e.g. Lunch Treat">
+          </div>
+          <div class="col-md-2">
+            <label for="friend-amount" class="form-label">Amount (₹)</label>
+            <input type="number" id="friend-amount" class="form-control" placeholder="0.00" step="0.01">
+          </div>
+          <div class="col-md-2">
+            <label for="friend-date" class="form-label">Date</label>
+            <input type="date" id="friend-date" class="form-control">
+          </div>
+          <div class="col-md-2">
+            <label for="friend-time" class="form-label">Time</label>
+            <input type="time" id="friend-time" class="form-control">
+          </div>
+        </div>
+        <button class="btn btn-warning w-100 mb-3" onclick="addFriendTransaction()">
+          <i class="fas fa-plus"></i> Add Friend Transaction
+        </button>
+        <div id="friend-list"></div>
+        <div class="total" id="friend-total">Total Given: ₹0</div>
+        <button class="btn btn-outline-danger w-100 mb-3" onclick="clearFriendTransactions()">
+          <i class="fas fa-trash"></i> Clear Friend Transactions
+        </button>
+      </div>
+
+      <!-- Received Transactions Section -->
+      <div class="section-card">
+        <div class="section-title">
+          <i class="fas fa-money-bill-wave"></i>
+          Money Received from Friends
+        </div>
+        <div class="row g-3 mb-3">
+          <div class="col-md-2">
+            <label for="recv-friend-name" class="form-label">Friend's Name</label>
+            <input type="text" id="recv-friend-name" class="form-control" placeholder="Name">
+          </div>
+          <div class="col-md-2">
+            <label for="recv-friend-desc" class="form-label">Reason</label>
+            <input type="text" id="recv-friend-desc" class="form-control" placeholder="e.g. Repayment">
+          </div>
+          <div class="col-md-2">
+            <label for="recv-friend-amount" class="form-label">Amount (₹)</label>
+            <input type="number" id="recv-friend-amount" class="form-control" placeholder="0.00" step="0.01">
+          </div>
+          <div class="col-md-2">
+            <label for="recv-friend-date" class="form-label">Date</label>
+            <input type="date" id="recv-friend-date" class="form-control">
+          </div>
+          <div class="col-md-2">
+            <label for="recv-friend-time" class="form-label">Time</label>
+            <input type="time" id="recv-friend-time" class="form-control">
+          </div>
+        </div>
+        <button class="btn btn-success w-100 mb-3" onclick="addReceivedTransaction()">
+          <i class="fas fa-plus"></i> Add Received Transaction
+        </button>
+        <div id="recv-friend-list"></div>
+        <div class="total" id="recv-friend-total">Total Received: ₹0</div>
+        <button class="btn btn-outline-danger w-100 mb-3" onclick="clearReceivedTransactions()">
+          <i class="fas fa-trash"></i> Clear Received Transactions
+        </button>
+      </div>
+
+      <!-- Data Viewer Section -->
+      <div class="section-card">
+        <div class="section-title">
+          <i class="fas fa-database"></i>
+          Data Management
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-md-3">
+            <button class="btn btn-outline-primary w-100" onclick="viewExpensesData()">
+              <i class="fas fa-eye"></i> View Expenses
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-outline-primary w-100" onclick="viewFriendData()">
+              <i class="fas fa-eye"></i> View Friend Data
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-outline-primary w-100" onclick="viewReceivedData()">
+              <i class="fas fa-eye"></i> View Received Data
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-outline-primary w-100" onclick="viewSettingsData()">
+              <i class="fas fa-eye"></i> View Settings
+            </button>
+          </div>
+        </div>
+        <div id="data-viewer" class="mb-3" style="display:none;">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h6 id="data-viewer-title" class="mb-0">Data Viewer</h6>
+              <button class="btn btn-sm btn-outline-secondary" onclick="closeDataViewer()">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div class="card-body">
+              <pre id="data-viewer-content" class="data-viewer"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Actions -->
+      <div class="section-card text-center">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <button class="btn btn-dark w-100" onclick="toggleDarkMode()">
+              <i class="fas fa-moon"></i> Toggle Dark Mode
+            </button>
+          </div>
+          <div class="col-md-6">
+            <button class="btn btn-danger w-100" onclick="clearAllData()">
+              <i class="fas fa-exclamation-triangle"></i> Clear All Data
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
     // --- EXPENSES SECTION ---
-    let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-    let monthlyLimit = parseFloat(localStorage.getItem("monthlyLimit")) || 0;
-    let currentMonth = localStorage.getItem("currentMonth") || "";
-    let lastRecurringMonth = localStorage.getItem("lastRecurringMonth") || "";
-    let recentCategories = JSON.parse(localStorage.getItem("recentCategories")) || [];
+    let expenses = [];
+    let monthlyLimit = 0;
+    let currentMonth = "";
+    let lastRecurringMonth = "";
+    let recentCategories = [];
+
+    // --- FRIEND TRANSACTIONS SECTION ---
+    let friendTransactions = [];
+    let receivedTransactions = [];
+
+    // API base URL
+    const API_BASE = 'http://localhost:3000/api';
+
+    // API functions
+    async function saveExpenses() {
+      try {
+        const response = await fetch(`${API_BASE}/expenses`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(expenses)
+        });
+        const result = await response.json();
+        if (!result.success) {
+          console.error('Failed to save expenses:', result.message);
+        }
+      } catch (error) {
+        console.error('Error saving expenses:', error);
+      }
+    }
+
+    async function loadExpenses() {
+      try {
+        const response = await fetch(`${API_BASE}/expenses`);
+        expenses = await response.json();
+      } catch (error) {
+        console.error('Error loading expenses:', error);
+        expenses = [];
+      }
+    }
+
+    async function saveFriendTransactions() {
+      try {
+        const response = await fetch(`${API_BASE}/friend-transactions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(friendTransactions)
+        });
+        const result = await response.json();
+        if (!result.success) {
+          console.error('Failed to save friend transactions:', result.message);
+        }
+      } catch (error) {
+        console.error('Error saving friend transactions:', error);
+      }
+    }
+
+    async function loadFriendTransactions() {
+      try {
+        const response = await fetch(`${API_BASE}/friend-transactions`);
+        friendTransactions = await response.json();
+      } catch (error) {
+        console.error('Error loading friend transactions:', error);
+        friendTransactions = [];
+      }
+    }
+
+    async function saveReceivedTransactions() {
+      try {
+        const response = await fetch(`${API_BASE}/received-transactions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(receivedTransactions)
+        });
+        const result = await response.json();
+        if (!result.success) {
+          console.error('Failed to save received transactions:', result.message);
+        }
+      } catch (error) {
+        console.error('Error saving received transactions:', error);
+      }
+    }
+
+    async function loadReceivedTransactions() {
+      try {
+        const response = await fetch(`${API_BASE}/received-transactions`);
+        receivedTransactions = await response.json();
+      } catch (error) {
+        console.error('Error loading received transactions:', error);
+        receivedTransactions = [];
+      }
+    }
+
+    async function saveSettings() {
+      try {
+        const settings = {
+          monthlyLimit,
+          currentMonth,
+          lastRecurringMonth,
+          recentCategories
+        };
+        const response = await fetch(`${API_BASE}/settings`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(settings)
+        });
+        const result = await response.json();
+        if (!result.success) {
+          console.error('Failed to save settings:', result.message);
+        }
+      } catch (error) {
+        console.error('Error saving settings:', error);
+      }
+    }
+
+    async function loadSettings() {
+      try {
+        const response = await fetch(`${API_BASE}/settings`);
+        const settings = await response.json();
+        monthlyLimit = settings.monthlyLimit || 0;
+        currentMonth = settings.currentMonth || "";
+        lastRecurringMonth = settings.lastRecurringMonth || "";
+        recentCategories = settings.recentCategories || [];
+      } catch (error) {
+        console.error('Error loading settings:', error);
+        monthlyLimit = 0;
+        currentMonth = "";
+        lastRecurringMonth = "";
+        recentCategories = [];
+      }
+    }
 
     // Preload month/limit
-    if (currentMonth) document.getElementById("month").value = currentMonth;
-    if (monthlyLimit) document.getElementById("limit").value = monthlyLimit;
+    async function initializeData() {
+      await loadSettings();
+      await loadExpenses();
+      await loadFriendTransactions();
+      await loadReceivedTransactions();
+
+      if (currentMonth) document.getElementById("month").value = currentMonth;
+      if (monthlyLimit) document.getElementById("limit").value = monthlyLimit;
+    }
+
+    // Update statistics dashboard
+    function updateStatistics() {
+      const filtered = expenses.filter(e => e.date.startsWith(currentMonth));
+      const totalExpenses = filtered.reduce((sum, e) => sum + e.amount, 0);
+      const budgetRemaining = monthlyLimit - totalExpenses;
+      
+      const friendTotal = friendTransactions.reduce((sum, t) => sum + t.amount, 0);
+      const receivedTotal = receivedTransactions.reduce((sum, t) => sum + t.amount, 0);
+
+      document.getElementById("total-expenses").textContent = `₹${totalExpenses.toFixed(2)}`;
+      document.getElementById("budget-remaining").textContent = `₹${budgetRemaining.toFixed(2)}`;
+      document.getElementById("friend-total-stat").textContent = `₹${friendTotal.toFixed(2)}`;
+      document.getElementById("received-total-stat").textContent = `₹${receivedTotal.toFixed(2)}`;
+
+      // Color coding for budget remaining
+      const budgetElement = document.getElementById("budget-remaining");
+      if (budgetRemaining < 0) {
+        budgetElement.style.color = "#dc2626";
+      } else if (budgetRemaining < monthlyLimit * 0.2) {
+        budgetElement.style.color = "#d97706";
+      } else {
+        budgetElement.style.color = "#059669";
+      }
+    }
 
     // --- Handle Recurring Expenses at Month Change ---
     function addRecurringExpensesIfNeeded() {
@@ -182,6 +834,7 @@
           // Add a new expense for this month
           expenses.push({
             date: nowMonth + "-01",
+            time: "00:00",
             category: e.category,
             description: e.description,
             amount: e.amount,
@@ -190,8 +843,8 @@
         }
       });
       lastRecurringMonth = nowMonth;
-      localStorage.setItem("lastRecurringMonth", lastRecurringMonth);
-      localStorage.setItem("expenses", JSON.stringify(expenses));
+      saveSettings();
+      saveExpenses();
     }
 
     function setLimit() {
@@ -206,15 +859,15 @@
       currentMonth = monthInput;
       monthlyLimit = parseFloat(limitInput);
 
-      localStorage.setItem("monthlyLimit", monthlyLimit);
-      localStorage.setItem("currentMonth", currentMonth);
+      saveSettings();
       addRecurringExpensesIfNeeded();
       displayExpenses();
+      updateStatistics();
 
       // Hide limit area and show limit message
       document.getElementById("limit-area").style.display = "none";
       const msg = document.getElementById("limit-message");
-      msg.innerHTML = `<strong>Limit for the month: ₹${monthlyLimit.toFixed(2)}</strong>`;
+      msg.innerHTML = `<div class="alert alert-success"><i class="fas fa-check-circle"></i> <strong>Budget set for ${currentMonth}: ₹${monthlyLimit.toFixed(2)}</strong></div>`;
       msg.style.display = "block";
       document.getElementById("change-limit-btn").style.display = "block";
     }
@@ -227,30 +880,33 @@
 
     function addExpense() {
       const date = document.getElementById("date").value;
+      const time = document.getElementById("time").value;
       const category = document.getElementById("category").value;
       const description = document.getElementById("description").value;
       const amount = parseFloat(document.getElementById("amount").value);
       const recurring = document.getElementById("recurring").checked;
 
-      if (!date || !category || !description || isNaN(amount)) {
-        alert("Fill all fields correctly.");
+      if (!date || !time || !category || !description || isNaN(amount)) {
+        alert("Please fill all fields correctly.");
         return;
       }
 
-      expenses.push({ date, category, description, amount, recurring });
-      localStorage.setItem("expenses", JSON.stringify(expenses));
+      expenses.push({ date, time, category, description, amount, recurring });
+      saveExpenses();
       // Update recent categories
       if (category) {
         recentCategories = recentCategories.filter(c => c !== category);
         recentCategories.unshift(category);
         if (recentCategories.length > 5) recentCategories = recentCategories.slice(0, 5);
-        localStorage.setItem("recentCategories", JSON.stringify(recentCategories));
+        saveSettings();
         renderRecentCategories();
       }
       displayExpenses();
+      updateStatistics();
 
       // Clear input fields
       document.getElementById("date").value = "";
+      document.getElementById("time").value = "";
       document.getElementById("category").value = "";
       document.getElementById("description").value = "";
       document.getElementById("amount").value = "";
@@ -265,16 +921,44 @@
 
       let total = 0;
       const filtered = expenses.filter(e => e.date.startsWith(currentMonth));
+      
+      if (filtered.length === 0) {
+        list.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-inbox fa-3x mb-3"></i><p>No expenses recorded for this month yet.</p></div>';
+        totalDiv.innerText = `Total: ₹0.00`;
+        warningDiv.innerText = '';
+        return;
+      }
+
       filtered.forEach((e) => {
         total += e.amount;
         const item = document.createElement("div");
-        item.className = "expense-item";
-        item.innerText = `${e.date} | ${e.category} | ${e.description} | ₹${e.amount}` + (e.recurring ? " | 🔁" : "");
+        item.className = `expense-item ${e.recurring ? 'recurring' : ''}`;
+        
+        const date = new Date(e.date).toLocaleDateString('en-IN');
+        const time = e.time;
+        const recurringIcon = e.recurring ? '<i class="fas fa-redo text-success"></i> ' : '';
+        
+        item.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <strong>${recurringIcon}${e.category}</strong> - ${e.description}
+              <br><small class="text-muted">${date} at ${time}</small>
+            </div>
+            <div class="text-end">
+              <strong class="text-primary">₹${e.amount.toFixed(2)}</strong>
+            </div>
+          </div>
+        `;
         list.appendChild(item);
       });
 
       totalDiv.innerText = `Total: ₹${total.toFixed(2)}`;
-      warningDiv.innerText = total > monthlyLimit ? `⚠️ Limit Exceeded by ₹${(total - monthlyLimit).toFixed(2)}` : '';
+      
+      if (total > monthlyLimit && monthlyLimit > 0) {
+        warningDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Budget exceeded by ₹${(total - monthlyLimit).toFixed(2)}`;
+      } else {
+        warningDiv.innerText = '';
+      }
     }
 
     function downloadCSV() {
@@ -284,9 +968,9 @@
         return;
       }
 
-      let csv = "Date,Category,Description,Amount\n";
+      let csv = "Date,Time,Category,Description,Amount,Recurring\n";
       filtered.forEach(e => {
-        csv += `${e.date},${e.category},${e.description},${e.amount}\n`;
+        csv += `${e.date},${e.time},${e.category},${e.description},${e.amount},${e.recurring ? 'Yes' : 'No'}\n`;
       });
 
       const blob = new Blob([csv], { type: 'text/csv' });
@@ -301,28 +985,28 @@
     }
 
     // --- FRIEND TRANSACTIONS SECTION ---
-    let friendTransactions = JSON.parse(localStorage.getItem("friendTransactions")) || [];
-    let receivedTransactions = JSON.parse(localStorage.getItem("receivedTransactions")) || [];
-
     function addFriendTransaction() {
       const name = document.getElementById("friend-name").value;
       const desc = document.getElementById("friend-desc").value;
       const amount = parseFloat(document.getElementById("friend-amount").value);
       const date = document.getElementById("friend-date").value;
+      const time = document.getElementById("friend-time").value;
 
-      if (!name || !desc || isNaN(amount) || !date) {
-        alert("Fill all fields correctly.");
+      if (!name || !desc || isNaN(amount) || !date || !time) {
+        alert("Please fill all fields correctly.");
         return;
       }
 
-      friendTransactions.push({ name, desc, amount, date });
-      localStorage.setItem("friendTransactions", JSON.stringify(friendTransactions));
+      friendTransactions.push({ name, desc, amount, date, time });
+      saveFriendTransactions();
       displayFriendTransactions();
+      updateStatistics();
 
       document.getElementById("friend-name").value = "";
       document.getElementById("friend-desc").value = "";
       document.getElementById("friend-amount").value = "";
       document.getElementById("friend-date").value = "";
+      document.getElementById("friend-time").value = "";
     }
 
     function displayFriendTransactions() {
@@ -331,11 +1015,31 @@
       list.innerHTML = "";
 
       let total = 0;
+      
+      if (friendTransactions.length === 0) {
+        list.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-handshake fa-3x mb-3"></i><p>No friend transactions recorded yet.</p></div>';
+        totalDiv.innerText = `Total Given: ₹0.00`;
+        return;
+      }
+
       friendTransactions.forEach(t => {
         total += t.amount;
         const item = document.createElement("div");
         item.className = "expense-item";
-        item.innerText = `${t.date} | To: ${t.name} | Reason: ${t.desc} | ₹${t.amount}`;
+        
+        const date = new Date(t.date).toLocaleDateString('en-IN');
+        
+        item.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <strong><i class="fas fa-user text-warning"></i> ${t.name}</strong> - ${t.desc}
+              <br><small class="text-muted">${date} at ${t.time}</small>
+            </div>
+            <div class="text-end">
+              <strong class="text-warning">₹${t.amount.toFixed(2)}</strong>
+            </div>
+          </div>
+        `;
         list.appendChild(item);
       });
 
@@ -347,20 +1051,23 @@
       const desc = document.getElementById("recv-friend-desc").value;
       const amount = parseFloat(document.getElementById("recv-friend-amount").value);
       const date = document.getElementById("recv-friend-date").value;
+      const time = document.getElementById("recv-friend-time").value;
 
-      if (!name || !desc || isNaN(amount) || !date) {
-        alert("Fill all fields correctly.");
+      if (!name || !desc || isNaN(amount) || !date || !time) {
+        alert("Please fill all fields correctly.");
         return;
       }
 
-      receivedTransactions.push({ name, desc, amount, date });
-      localStorage.setItem("receivedTransactions", JSON.stringify(receivedTransactions));
+      receivedTransactions.push({ name, desc, amount, date, time });
+      saveReceivedTransactions();
       displayReceivedTransactions();
+      updateStatistics();
 
       document.getElementById("recv-friend-name").value = "";
       document.getElementById("recv-friend-desc").value = "";
       document.getElementById("recv-friend-amount").value = "";
       document.getElementById("recv-friend-date").value = "";
+      document.getElementById("recv-friend-time").value = "";
     }
 
     function displayReceivedTransactions() {
@@ -368,11 +1075,31 @@
       const totalDiv = document.getElementById("recv-friend-total");
       list.innerHTML = "";
       let total = 0;
+      
+      if (receivedTransactions.length === 0) {
+        list.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-gift fa-3x mb-3"></i><p>No received transactions recorded yet.</p></div>';
+        totalDiv.innerText = `Total Received: ₹0.00`;
+        return;
+      }
+
       receivedTransactions.forEach((t) => {
         total += t.amount;
         const item = document.createElement("div");
         item.className = "expense-item";
-        item.innerText = `${t.date} | ${t.name} | ${t.desc} | ₹${t.amount}`;
+        
+        const date = new Date(t.date).toLocaleDateString('en-IN');
+        
+        item.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <strong><i class="fas fa-user text-success"></i> ${t.name}</strong> - ${t.desc}
+              <br><small class="text-muted">${date} at ${t.time}</small>
+            </div>
+            <div class="text-end">
+              <strong class="text-success">₹${t.amount.toFixed(2)}</strong>
+            </div>
+          </div>
+        `;
         list.appendChild(item);
       });
       totalDiv.innerText = `Total Received: ₹${total.toFixed(2)}`;
@@ -381,14 +1108,59 @@
     // --- DARK MODE ---
     function toggleDarkMode() {
       document.body.classList.toggle('dark-mode');
-      document.querySelectorAll('.card').forEach(card => card.classList.toggle('dark-mode'));
+      const icon = document.querySelector('.btn-dark i');
+      if (document.body.classList.contains('dark-mode')) {
+        icon.className = 'fas fa-sun';
+      } else {
+        icon.className = 'fas fa-moon';
+      }
     }
 
     // --- CLEAR ALL DATA ---
-    function clearAllData() {
+    async function clearAllData() {
       if (confirm('Are you sure you want to remove all data? This cannot be undone.')) {
-        localStorage.clear();
-        location.reload();
+        try {
+          const response = await fetch(`${API_BASE}/clear-all`, {
+            method: 'DELETE'
+          });
+          const result = await response.json();
+          if (result.success) {
+            location.reload();
+          } else {
+            alert('Failed to clear data: ' + result.message);
+          }
+        } catch (error) {
+          console.error('Error clearing data:', error);
+          alert('Failed to clear data. Please try again.');
+        }
+      }
+    }
+
+    // --- CLEAR SECTION DATA ---
+    function clearExpenses() {
+      if (confirm('Are you sure you want to remove all expenses? This cannot be undone.')) {
+        expenses = [];
+        saveExpenses();
+        displayExpenses();
+        updateStatistics();
+      }
+    }
+
+    function clearFriendTransactions() {
+      if (confirm('Are you sure you want to remove all friend transactions? This cannot be undone.')) {
+        friendTransactions = [];
+        saveFriendTransactions();
+        displayFriendTransactions();
+        updateStatistics();
+      }
+    }
+
+    function clearReceivedTransactions() {
+      if (confirm('Are you sure you want to remove all received transactions? This cannot be undone.')) {
+        receivedTransactions = [];
+        saveReceivedTransactions();
+        displayReceivedTransactions();
+        updateStatistics();
       }
     }
 
@@ -396,28 +1168,85 @@
       const container = document.getElementById("recent-categories");
       container.innerHTML = '';
       if (recentCategories.length === 0) return;
+      
       recentCategories.forEach(cat => {
         const btn = document.createElement('button');
-        btn.className = 'btn btn-sm btn-outline-primary me-1 mb-1';
-        btn.innerText = cat;
+        btn.className = 'category-tag';
+        btn.innerHTML = `<i class="fas fa-tag"></i> ${cat}`;
         btn.onclick = () => { document.getElementById("category").value = cat; };
         container.appendChild(btn);
       });
     }
 
+    // --- DATA VIEWER FUNCTIONS ---
+    function viewExpensesData() {
+      const viewer = document.getElementById("data-viewer");
+      const title = document.getElementById("data-viewer-title");
+      const content = document.getElementById("data-viewer-content");
+      
+      title.textContent = "Expenses Data";
+      content.textContent = JSON.stringify(expenses, null, 2);
+      viewer.style.display = "block";
+    }
+
+    function viewFriendData() {
+      const viewer = document.getElementById("data-viewer");
+      const title = document.getElementById("data-viewer-title");
+      const content = document.getElementById("data-viewer-content");
+      
+      title.textContent = "Friend Transactions Data";
+      content.textContent = JSON.stringify(friendTransactions, null, 2);
+      viewer.style.display = "block";
+    }
+
+    function viewReceivedData() {
+      const viewer = document.getElementById("data-viewer");
+      const title = document.getElementById("data-viewer-title");
+      const content = document.getElementById("data-viewer-content");
+      
+      title.textContent = "Received Transactions Data";
+      content.textContent = JSON.stringify(receivedTransactions, null, 2);
+      viewer.style.display = "block";
+    }
+
+    function viewSettingsData() {
+      const viewer = document.getElementById("data-viewer");
+      const title = document.getElementById("data-viewer-title");
+      const content = document.getElementById("data-viewer-content");
+      
+      const settings = {
+        monthlyLimit,
+        currentMonth,
+        lastRecurringMonth,
+        recentCategories
+      };
+      
+      title.textContent = "Settings Data";
+      content.textContent = JSON.stringify(settings, null, 2);
+      viewer.style.display = "block";
+    }
+
+    function closeDataViewer() {
+      document.getElementById("data-viewer").style.display = "none";
+    }
+
     // On page load, if limit is already set, hide limit area and show message
-    window.onload = function() {
+    window.onload = async function() {
+      await initializeData();
+      
       if (currentMonth && monthlyLimit) {
         document.getElementById("limit-area").style.display = "none";
         const msg = document.getElementById("limit-message");
-        msg.innerHTML = `<strong>Limit for the month: ₹${monthlyLimit.toFixed(2)}</strong>`;
+        msg.innerHTML = `<div class="alert alert-success"><i class="fas fa-check-circle"></i> <strong>Budget for ${currentMonth}: ₹${monthlyLimit.toFixed(2)}</strong></div>`;
         msg.style.display = "block";
         document.getElementById("change-limit-btn").style.display = "block";
       }
+      
       displayExpenses();
       displayFriendTransactions();
       displayReceivedTransactions();
       renderRecentCategories();
+      updateStatistics();
     }
   </script>
 
